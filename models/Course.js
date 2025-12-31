@@ -30,10 +30,6 @@ const courseSchema = new mongoose.Schema({
   },
 
   /* ===== FORMAT ===== */
-  format: {
-    type: String,
-    default: "custom_sections"
-  },
 
   hiddenSections: {
     type: String,
