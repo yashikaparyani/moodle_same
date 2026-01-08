@@ -174,10 +174,8 @@ exports.createCourse = async (req, res) => {
       startDate,
       endDate,
       visibility,
-      courseImage,
       showGradebook,
       completionTracking,
-      groupMode,
       tags
     } = req.body;
 
@@ -219,10 +217,8 @@ exports.createCourse = async (req, res) => {
       startDate,
       endDate,
       visibility: visibility || 'show',
-      courseImage,
       showGradebook: showGradebook !== undefined ? showGradebook : true,
       completionTracking: completionTracking !== undefined ? completionTracking : true,
-      groupMode: groupMode || 'no_groups',
       tags: tags || [],
       createdBy: req.userId,
       status: 'active'
@@ -298,11 +294,8 @@ exports.updateCourse = async (req, res) => {
     const allowedFields = [
       'fullName', 'shortName', 'courseCode', 'categoryId',
       'summary', 'startDate', 'endDate', 'visibility',
-      'courseImage', 'showGradebook', 'completionTracking',
-      'groupMode', 'forceGroupMode', 'tags', 'status',
-      'showActivityReports', 'showActivityDates',
-      'showCompletionConditions', 'announcementCount',
-      'hiddenSections', 'layout'
+      'showGradebook', 'completionTracking',
+      'showCompletionConditions', 'tags', 'status'
     ];
 
     allowedFields.forEach(field => {
