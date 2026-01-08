@@ -1,18 +1,46 @@
-// models/User.js
+// models/User.js - Enhanced User Model with Security Features
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  // Authentication
-  email: { type: String, unique: true, required: true },
-  username: { type: String, unique: true, sparse: true },
-  password: { type: String, required: true },
+  // ========== Authentication Fields ==========
+  email: { 
+    type: String, 
+    unique: true, 
+    required: true,
+    lowercase: true,
+    trim: true
+  },
+  username: { 
+    type: String, 
+    unique: true, 
+    sparse: true,
+    trim: true
+  },
+  password: { 
+    type: String, 
+    required: true 
+  },
   
-  // Basic role (for backward compatibility)
-  role: { type: String, enum: ["admin", "trainer", "candidate", "student", "teacher", "manager"], required: true },
+  // ========== Role-Based Access Control ==========
+  // Standard LMS roles (Moodle-compatible)
+  role: { 
+    type: String, 
+    enum: ["admin", "manager", "course_creator", "teacher", "non_editing_teacher", "student"],
+    default: "student",
+    required: true 
+  },
   
-  // Profile information
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
+  // ========== Profile Information ==========
+  firstName: { 
+    type: String, 
+    required: true,
+    trim: true
+  },
+  lastName: { 
+    type: String, 
+    required: true,
+    trim: true
+  },
   profilePicture: String,
   phone: String,
   address: {
@@ -23,32 +51,54 @@ const userSchema = new mongoose.Schema({
     zipCode: String
   },
   
-  // Bio and social
+  // ========== Bio and Interests ==========
   bio: String,
   interests: [String],
   timezone: { type: String, default: "UTC" },
   language: { type: String, default: "en" },
   
-  // Account status
+  // ========== Account Status & Security ==========
   status: { 
     type: String, 
     enum: ["active", "suspended", "inactive", "pending"],
     default: "active" 
   },
   
-  // Email verification
-  emailVerified: { type: Boolean, default: false },
-  emailVerificationToken: String,
+  // Security: Account Lockout Protection
+  failedLoginAttempts: {
+    type: Number,
+    default: 0
+  },
+  lockedUntil: {
+    type: Date,
+    default: null
+  },
   
-  // Password reset
+  // ========== Email Verification ==========
+  emailVerified: { 
+    type: Boolean, 
+    default: false 
+  },
+  emailVerificationToken: String,
+  emailVerificationExpires: Date,
+  
+  // ========== Password Reset ==========
   resetPasswordToken: String,
   resetPasswordExpires: Date,
   
-  // Last activity
+  // ========== Last Activity Tracking ==========
   lastLogin: Date,
+  lastLoginIp: String,
   lastActivity: Date,
   
-  // Preferences
+  // ========== Audit Fields ==========
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null
+  },
+  
+  // ========== User Preferences ==========
   preferences: {
     emailNotifications: { type: Boolean, default: true },
     pushNotifications: { type: Boolean, default: true },
@@ -58,25 +108,81 @@ const userSchema = new mongoose.Schema({
     courseDisplayMode: { type: String, enum: ["card", "list", "summary"], default: "card" }
   },
   
-  // Legacy field
-  linkedCandidateId: { type: mongoose.Schema.Types.ObjectId, ref: "Candidate" },
-  
-  // OAuth providers
+  // ========== Legacy & OAuth Fields ==========
+  linkedCandidateId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Candidate" 
+  },
   oauthProviders: [{
     provider: String,
     providerId: String
   }]
   
-}, { timestamps: true });
+}, { 
+  timestamps: true, // Automatically adds createdAt and updatedAt
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
 
-// Indexes
+// ========== Indexes for Performance ==========
 userSchema.index({ email: 1 });
 userSchema.index({ username: 1 });
 userSchema.index({ role: 1, status: 1 });
+userSchema.index({ lastLogin: -1 });
 
-// Virtual for full name
+// ========== Virtual Fields ==========
 userSchema.virtual('fullName').get(function() {
   return `${this.firstName} ${this.lastName}`;
 });
 
+// ========== Instance Methods ==========
+
+/**
+ * Check if account is locked
+ * @returns {boolean} True if account is currently locked
+ */
+userSchema.methods.isLocked = function() {
+  return this.lockedUntil && this.lockedUntil > Date.now();
+};
+
+/**
+ * Increment failed login attempts and lock if needed
+ * Locks account for 3 hours after 5 failed attempts
+ */
+userSchema.methods.incrementFailedAttempts = async function() {
+  this.failedLoginAttempts += 1;
+  
+  // Lock account after 5 failed attempts for 3 hours
+  if (this.failedLoginAttempts >= 5) {
+    this.lockedUntil = new Date(Date.now() + 3 * 60 * 60 * 1000); // 3 hours
+  }
+  
+  await this.save();
+};
+
+/**
+ * Reset failed attempts on successful login
+ */
+userSchema.methods.resetFailedAttempts = async function() {
+  this.failedLoginAttempts = 0;
+  this.lockedUntil = null;
+  this.lastLogin = new Date();
+  await this.save();
+};
+
+/**
+ * Get safe user object (without sensitive data)
+ * @returns {Object} User object without password and sensitive fields
+ */
+userSchema.methods.toSafeObject = function() {
+  const obj = this.toObject();
+  delete obj.password;
+  delete obj.resetPasswordToken;
+  delete obj.emailVerificationToken;
+  delete obj.failedLoginAttempts;
+  delete obj.lockedUntil;
+  return obj;
+};
+
+// ========== Export Model ==========
 module.exports = mongoose.model("User", userSchema);

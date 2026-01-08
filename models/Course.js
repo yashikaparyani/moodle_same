@@ -24,47 +24,8 @@ const courseSchema = new mongoose.Schema({
 
   summary: String,
 
-  /* ===== COURSE IMAGE ===== */
-  courseImage: {
-    type: String // URL or file path
-  },
-
-  /* ===== FORMAT ===== */
-
-  hiddenSections: {
-    type: String,
-    enum: ["hidden", "collapsed"],
-    default: "hidden"
-  },
-
-  layout: {
-    type: String,
-    enum: ["single_page", "multiple_pages"],
-    default: "single_page"
-  },
-
   /* ===== APPEARANCE ===== */
-  forceLanguage: {
-    type: String,
-    default: null
-  },
-
-  announcementCount: {
-    type: Number,
-    default: 5
-  },
-
   showGradebook: {
-    type: Boolean,
-    default: true
-  },
-
-  showActivityReports: {
-    type: Boolean,
-    default: false
-  },
-
-  showActivityDates: {
     type: Boolean,
     default: true
   },
@@ -78,23 +39,6 @@ const courseSchema = new mongoose.Schema({
   showCompletionConditions: {
     type: Boolean,
     default: true
-  },
-
-  /* ===== GROUPS ===== */
-  groupMode: {
-    type: String,
-    enum: ["no_groups", "separate", "visible"],
-    default: "no_groups"
-  },
-
-  forceGroupMode: {
-    type: Boolean,
-    default: false
-  },
-
-  defaultGrouping: {
-    type: String,
-    default: null
   },
 
   /* ===== TAGS ===== */
