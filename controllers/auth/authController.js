@@ -77,7 +77,13 @@ exports.register = async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId: newUser._id, email: newUser.email, role: newUser.role },
+      { 
+        userId: newUser._id, 
+        email: newUser.email, 
+        role: newUser.role,
+        organizationId: newUser.organizationId,
+        isPlatformAdmin: newUser.isPlatformAdmin || false
+      },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );
@@ -87,7 +93,15 @@ exports.register = async (req, res) => {
       success: true,
       message: 'User registered successfully',
       data: {
-        user: newUser.toSafeObject(),
+        user: {
+          _id: newUser._id,
+          email: newUser.email,
+          firstName: newUser.firstName,
+          lastName: newUser.lastName,
+          role: newUser.role,
+          organizationId: newUser.organizationId,
+          isPlatformAdmin: newUser.isPlatformAdmin
+        },
         token
       }
     });
@@ -132,16 +146,6 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Check if account is locked
-    if (user.isLocked()) {
-      const remainingTime = Math.ceil((user.lockedUntil - Date.now()) / (1000 * 60));
-      return res.status(423).json({
-        success: false,
-        message: `Account is locked due to too many failed login attempts. Please try again in ${remainingTime} minutes.`,
-        lockedUntil: user.lockedUntil
-      });
-    }
-
     // Check account status
     if (user.status !== 'active') {
       return res.status(403).json({
@@ -154,34 +158,17 @@ exports.login = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      // Increment failed attempts
-      await user.incrementFailedAttempts();
-
       // Log failed login attempt
       await AuditService.logLoginFailed(email, 'Invalid password', req);
 
-      // Check if account got locked
-      if (user.failedLoginAttempts >= 5) {
-        await AuditService.logAccountLocked(user, user.failedLoginAttempts, req);
-      }
-
-      const attemptsLeft = 5 - user.failedLoginAttempts;
-      const message = attemptsLeft > 0
-        ? `Invalid email or password. ${attemptsLeft} attempts remaining.`
-        : 'Account locked due to too many failed attempts. Try again in 3 hours.';
-
       return res.status(401).json({
         success: false,
-        message
+        message: 'Invalid email or password'
       });
     }
 
-    // Reset failed attempts on successful login
-    await user.resetFailedAttempts();
-
     // Update last login
     user.lastLogin = new Date();
-    user.lastLoginIp = req.ip || req.connection.remoteAddress;
     await user.save();
 
     // Log successful login
@@ -192,7 +179,9 @@ exports.login = async (req, res) => {
       { 
         userId: user._id, 
         email: user.email, 
-        role: user.role 
+        role: user.role,
+        organizationId: user.organizationId,
+        isPlatformAdmin: user.isPlatformAdmin || false
       },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
@@ -203,7 +192,15 @@ exports.login = async (req, res) => {
       success: true,
       message: 'Login successful',
       data: {
-        user: user.toSafeObject(),
+        user: {
+          _id: user._id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          role: user.role,
+          organizationId: user.organizationId,
+          isPlatformAdmin: user.isPlatformAdmin
+        },
         token
       }
     });
@@ -231,7 +228,16 @@ exports.getCurrentUser = async (req, res) => {
     res.status(200).json({
       success: true,
       data: {
-        user: user.toSafeObject()
+        user: {
+          _id: user._id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          role: user.role,
+          organizationId: user.organizationId,
+          isPlatformAdmin: user.isPlatformAdmin,
+          status: user.status
+        }
       }
     });
 

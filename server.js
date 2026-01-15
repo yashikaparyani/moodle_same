@@ -12,6 +12,7 @@ const { connectRedis } = require("./config/redis");
 // Import middleware
 const logger = require("./middleware/logger");
 const errorHandler = require("./middleware/errorHandler");
+const { setOrganizationContext, scopeToOrganization } = require("./middleware/organizationMiddleware");
 
 // Initialize Express app
 const app = express();
@@ -35,6 +36,13 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' })); // Parse URL-enc
 app.use(logger);
 
 // ========== API Routes ==========
+// Organization routes (public and platform admin - no organization context needed)
+app.use("/api/v1/organizations", require("./routes/organization.routes"));
+app.use("/api/v1/organization", require("./routes/organization.routes"));
+
+// Apply organization middleware to all other API routes
+app.use("/api", setOrganizationContext, scopeToOrganization);
+
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/users", require("./routes/user.routes"));
 app.use("/api/audit", require("./routes/audit.routes"));

@@ -2,6 +2,13 @@
 const mongoose = require("mongoose");
 
 const activitySchema = new mongoose.Schema({
+  organizationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Organization",
+    required: true,
+    index: true
+  },
+  
   sectionId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Section",
@@ -127,7 +134,7 @@ const activitySchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Index for efficient queries
-activitySchema.index({ courseId: 1, sectionId: 1, order: 1 });
-activitySchema.index({ type: 1 });
+activitySchema.index({ organizationId: 1, courseId: 1, sectionId: 1, order: 1 });
+activitySchema.index({ organizationId: 1, type: 1 });
 
 module.exports = mongoose.model("Activity", activitySchema);

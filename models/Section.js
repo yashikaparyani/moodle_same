@@ -2,6 +2,13 @@
 const mongoose = require("mongoose");
 
 const sectionSchema = new mongoose.Schema({
+  organizationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Organization",
+    required: true,
+    index: true
+  },
+  
   courseId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Course",
@@ -53,6 +60,6 @@ const sectionSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Index for efficient queries
-sectionSchema.index({ courseId: 1, order: 1 });
+sectionSchema.index({ organizationId: 1, courseId: 1, order: 1 });
 
 module.exports = mongoose.model("Section", sectionSchema);

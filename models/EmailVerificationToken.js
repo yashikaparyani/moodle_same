@@ -3,6 +3,12 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 
 const emailVerificationTokenSchema = new mongoose.Schema({
+  organizationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+    required: false,
+    index: true
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -25,6 +31,7 @@ const emailVerificationTokenSchema = new mongoose.Schema({
 
 // Index for auto-deletion of expired tokens
 emailVerificationTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+emailVerificationTokenSchema.index({ organizationId: 1, userId: 1 });
 
 // Static method to create verification token
 emailVerificationTokenSchema.statics.createVerificationToken = async function(userId) {

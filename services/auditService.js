@@ -26,14 +26,16 @@ class AuditService {
       return {
         actorUserId: null,
         actorEmail: null,
-        actorRole: null
+        actorRole: null,
+        organizationId: null
       };
     }
 
     return {
       actorUserId: req.user._id || req.user.id,
       actorEmail: req.user.email,
-      actorRole: req.user.role
+      actorRole: req.user.role,
+      organizationId: req.user.organizationId || null
     };
   }
 
@@ -69,6 +71,7 @@ class AuditService {
   static async logUserCreated(user, req, createdBy = null) {
     return this.log({
       action: 'USER_CREATED',
+      organizationId: user.organizationId,
       entityType: 'USER',
       entityId: user._id,
       entityName: `${user.firstName} ${user.lastName}`,
@@ -87,6 +90,7 @@ class AuditService {
   static async logUserUpdated(user, changes, req) {
     return this.log({
       action: 'USER_UPDATED',
+      organizationId: user.organizationId,
       entityType: 'USER',
       entityId: user._id,
       entityName: `${user.firstName} ${user.lastName}`,
@@ -159,6 +163,7 @@ class AuditService {
   static async logLoginSuccess(user, req) {
     return this.log({
       action: 'LOGIN_SUCCESS',
+      organizationId: user.organizationId,
       actorUserId: user._id,
       actorEmail: user.email,
       actorRole: user.role,
@@ -175,9 +180,29 @@ class AuditService {
   /**
    * Log failed login attempt
    */
-  static async logLoginFailed(email, reason, req) {
+  static async logLoginFailed(email, reason, req, organizationId = null) {
+    // If organizationId not provided, try to look it up from the user
+    if (!organizationId && email) {
+      try {
+        const User = require('../models/User');
+        const user = await User.findOne({ email: email.toLowerCase() }).select('organizationId');
+        organizationId = user?.organizationId || null;
+      } catch (error) {
+        // If lookup fails, we'll skip audit logging for this failed attempt
+        console.error('⚠️  Could not determine organizationId for failed login audit');
+        return null;
+      }
+    }
+
+    // Skip audit log if we still don't have organizationId
+    if (!organizationId) {
+      console.warn('⚠️  Skipping audit log for failed login - no organizationId');
+      return null;
+    }
+
     return this.log({
       action: 'LOGIN_FAILED',
+      organizationId,
       actorEmail: email,
       entityType: 'USER',
       metadata: {
@@ -195,6 +220,7 @@ class AuditService {
   static async logLogout(user, req) {
     return this.log({
       action: 'LOGOUT',
+      organizationId: user.organizationId,
       actorUserId: user._id,
       actorEmail: user.email,
       actorRole: user.role,

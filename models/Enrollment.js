@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 
 const enrollmentSchema = new mongoose.Schema({
+  // Organization (Multi-tenancy)
+  organizationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Organization",
+    required: true,
+    index: true
+  },
+  
   courseId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Course",
@@ -105,9 +113,9 @@ const enrollmentSchema = new mongoose.Schema({
   
 }, { timestamps: true });
 
-// Compound index to ensure unique enrollment
-enrollmentSchema.index({ courseId: 1, userId: 1 }, { unique: true });
-enrollmentSchema.index({ userId: 1, status: 1 });
-enrollmentSchema.index({ courseId: 1, role: 1, status: 1 });
+// Compound index to ensure unique enrollment per organization
+enrollmentSchema.index({ organizationId: 1, courseId: 1, userId: 1 }, { unique: true });
+enrollmentSchema.index({ organizationId: 1, userId: 1, status: 1 });
+enrollmentSchema.index({ organizationId: 1, courseId: 1, role: 1, status: 1 });
 
 module.exports = mongoose.model("Enrollment", enrollmentSchema);

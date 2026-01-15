@@ -3,6 +3,12 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 
 const passwordResetTokenSchema = new mongoose.Schema({
+  organizationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+    required: false,
+    index: true
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -29,6 +35,7 @@ const passwordResetTokenSchema = new mongoose.Schema({
 
 // Index for auto-deletion of expired tokens
 passwordResetTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+passwordResetTokenSchema.index({ organizationId: 1, userId: 1 });
 
 // Static method to create password reset token
 passwordResetTokenSchema.statics.createResetToken = async function(userId) {

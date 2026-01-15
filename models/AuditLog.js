@@ -2,6 +2,13 @@
 const mongoose = require('mongoose');
 
 const auditLogSchema = new mongoose.Schema({
+  organizationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+    required: true,
+    index: true
+  },
+  
   // Action Information
   action: {
     type: String,
@@ -111,10 +118,10 @@ const auditLogSchema = new mongoose.Schema({
 });
 
 // Indexes for efficient queries
-auditLogSchema.index({ action: 1, createdAt: -1 });
-auditLogSchema.index({ actorUserId: 1, createdAt: -1 });
-auditLogSchema.index({ entityType: 1, entityId: 1 });
-auditLogSchema.index({ createdAt: -1 });
+auditLogSchema.index({ organizationId: 1, action: 1, createdAt: -1 });
+auditLogSchema.index({ organizationId: 1, actorUserId: 1, createdAt: -1 });
+auditLogSchema.index({ organizationId: 1, entityType: 1, entityId: 1 });
+auditLogSchema.index({ organizationId: 1, createdAt: -1 });
 auditLogSchema.index({ ip: 1 });
 
 // TTL Index - auto-delete logs older than 1 year (optional)

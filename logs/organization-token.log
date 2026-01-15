@@ -1,0 +1,42 @@
+{"level":"info","message":"Generated new organization token","timestamp":"2026-01-12T08:30:19.357Z"}
+{"errors":{"email":{"kind":"required","message":"Email is required","name":"ValidatorError","path":"email","properties":{"message":"Email is required","path":"email","type":"required"}}},"level":"error","message":"Organization token validation error","timestamp":"2026-01-12T08:30:19.367Z","tokenId":"6964b11b546823b43d0861f1"}
+{"level":"info","message":"Generated new organization token","timestamp":"2026-01-12T08:31:14.321Z"}
+{"errors":{"email":{"kind":"required","message":"Email is required","name":"ValidatorError","path":"email","properties":{"message":"Email is required","path":"email","type":"required"}}},"level":"error","message":"Organization token validation error","timestamp":"2026-01-12T08:31:14.323Z","tokenId":"6964b152546823b43d0861f3"}
+{"level":"info","message":"Generated new organization token","timestamp":"2026-01-12T08:36:37.618Z"}
+{"errors":{"email":{"kind":"required","message":"Email is required","name":"ValidatorError","path":"email","properties":{"message":"Email is required","path":"email","type":"required"}}},"level":"error","message":"Organization token validation error","timestamp":"2026-01-12T08:36:37.619Z","tokenId":"6964b295546823b43d0861f9"}
+{"level":"info","message":"Generated new organization token","timestamp":"2026-01-12T08:38:25.791Z"}
+{"errors":{"email":{"kind":"required","message":"Email is required","name":"ValidatorError","path":"email","properties":{"message":"Email is required","path":"email","type":"required"}}},"level":"error","message":"Organization token validation error","timestamp":"2026-01-12T08:38:25.792Z","tokenId":"6964b301546823b43d0861fb"}
+{"level":"info","message":"Generated new organization token","timestamp":"2026-01-12T08:38:28.904Z"}
+{"errors":{"email":{"kind":"required","message":"Email is required","name":"ValidatorError","path":"email","properties":{"message":"Email is required","path":"email","type":"required"}}},"level":"error","message":"Organization token validation error","timestamp":"2026-01-12T08:38:28.905Z","tokenId":"6964b304546823b43d0861fd"}
+{"level":"info","message":"Generated new organization token","timestamp":"2026-01-12T08:40:50.615Z"}
+{"errors":{"email":{"kind":"required","message":"Email is required","name":"ValidatorError","path":"email","properties":{"message":"Email is required","path":"email","type":"required"}}},"level":"error","message":"Organization token validation error","timestamp":"2026-01-12T08:40:50.616Z","tokenId":"6964b392546823b43d0861ff"}
+{"level":"info","message":"Generated new organization token","timestamp":"2026-01-12T08:41:20.465Z"}
+{"errors":{"email":{"kind":"required","message":"Email is required","name":"ValidatorError","path":"email","properties":{"message":"Email is required","path":"email","type":"required"}}},"level":"error","message":"Organization token validation error","timestamp":"2026-01-12T08:41:20.466Z","tokenId":"6964b3b0546823b43d086201"}
+{"level":"info","message":"Generated new organization token","timestamp":"2026-01-12T08:59:46.649Z"}
+{"level":"info","message":"Generated new organization token","timestamp":"2026-01-12T09:02:21.736Z"}
+{"level":"info","message":"Generated new organization token","timestamp":"2026-01-12T09:06:04.641Z"}
+{"level":"info","message":"Organization token saved: 57d5eed43b... (6964b97c4315f2f0dbbae3cd) - Status: active","timestamp":"2026-01-12T09:06:04.663Z"}
+{"level":"info","message":"Generated new organization token","timestamp":"2026-01-12T09:09:48.865Z"}
+{"level":"info","message":"Organization token saved: d494bddcfa... (6964ba5cfc3ccb170b5604ed) - Status: active","timestamp":"2026-01-12T09:09:48.881Z"}
+{"level":"info","message":"Token validation check: d494bddcfa... - Valid: true","timestamp":"2026-01-12T09:10:57.646Z"}
+{"level":"info","message":"Token validation check: d494bddcfa... - Valid: true","timestamp":"2026-01-12T09:16:12.539Z"}
+{"level":"info","message":"Token validation check: d494bddcfa... - Valid: true","timestamp":"2026-01-12T09:17:38.666Z"}
+{"level":"info","message":"Token validation check: d494bddcfa... - Valid: true","timestamp":"2026-01-12T09:17:38.827Z"}
+{"level":"info","message":"Organization token saved: d494bddcfa... (6964ba5cfc3ccb170b5604ed) - Status: used","timestamp":"2026-01-12T09:17:38.831Z"}
+{"level":"info","message":"Token marked as used: d494bddcfa... by user 6964bc32c656d98a36ec476f","timestamp":"2026-01-12T09:17:38.831Z"}
+{"level":"info","message":"Generated new organization token","timestamp":"2026-01-13T14:17:13.753Z"}
+{"level":"info","message":"Organization token saved: 584870c2bd... (696653e9a4a4ed94ecc5a6a0) - Status: active","timestamp":"2026-01-13T14:17:13.774Z"}
+{"level":"info","message":"Organization token saved: 57d5eed43b... (6964b97c4315f2f0dbbae3cd) - Status: revoked","timestamp":"2026-01-13T15:39:31.313Z"}
+{"level":"info","message":"Token revoked: 57d5eed43b... - Reason: Revoked by platform admin","timestamp":"2026-01-13T15:39:31.315Z"}
+{"level":"info","message":"Token validation check: 57d5eed43b... - Valid: false","timestamp":"2026-01-13T15:52:27.788Z"}
+{"level":"info","message":"Token validation check: d494bddcfa... - Valid: false","timestamp":"2026-01-13T15:54:10.333Z"}
+{"level":"info","message":"Token validation check: 584870c2bd... - Valid: true","timestamp":"2026-01-13T15:54:47.701Z"}
+{"level":"info","message":"Token validation check: 584870c2bd... - Valid: true","timestamp":"2026-01-13T15:56:53.670Z"}
+{"level":"info","message":"Token validation check: 584870c2bd... - Valid: true","timestamp":"2026-01-13T15:57:05.870Z"}
+{"level":"info","message":"Token validation check: 584870c2bd... - Valid: true","timestamp":"2026-01-13T15:57:15.886Z"}
+{"level":"info","message":"Token validation check: 584870c2bd... - Valid: true","timestamp":"2026-01-13T15:57:35.686Z"}
+{"level":"info","message":"Token validation check: 584870c2bd... - Valid: true","timestamp":"2026-01-13T15:57:35.847Z"}
+{"level":"info","message":"Organization token saved: 584870c2bd... (696653e9a4a4ed94ecc5a6a0) - Status: used","timestamp":"2026-01-13T15:57:35.854Z"}
+{"level":"info","message":"Token marked as used: 584870c2bd... by user 69666b6f4eda0e46d99024de","timestamp":"2026-01-13T15:57:35.854Z"}
+{"level":"info","message":"Token validation check: 584870c2bd... - Valid: false","timestamp":"2026-01-13T16:01:22.888Z"}
+{"level":"info","message":"Token validation check: 584870c2bd... - Valid: false","timestamp":"2026-01-13T16:02:02.588Z"}

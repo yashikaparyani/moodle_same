@@ -53,8 +53,7 @@ exports.getAllUsers = async (req, res) => {
         .select('-password -resetPasswordToken -emailVerificationToken')
         .sort(sortOptions)
         .skip(skip)
-        .limit(parseInt(limit))
-        .populate('createdBy', 'firstName lastName email'),
+        .limit(parseInt(limit)),
       User.countDocuments(filter)
     ]);
 
@@ -95,8 +94,7 @@ exports.getUserById = async (req, res) => {
     const { id } = req.params;
 
     const user = await User.findById(id)
-      .select('-password -resetPasswordToken -emailVerificationToken')
-      .populate('createdBy', 'firstName lastName email');
+      .select('-password -resetPasswordToken -emailVerificationToken');
 
     if (!user) {
       return res.status(404).json({

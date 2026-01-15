@@ -1,0 +1,7 @@
+{"level":"info","message":"Organization saved: Platform (6964ab8317ccc51aa882abcb)","timestamp":"2026-01-12T08:06:27.604Z"}
+{"errors":{"slug":{"kind":"required","message":"Path `slug` is required.","name":"ValidatorError","path":"slug","properties":{"message":"Path `slug` is required.","path":"slug","type":"required"}}},"level":"error","message":"Organization validation error","organizationId":"6964bbdcfc3ccb170b5604f5","timestamp":"2026-01-12T09:16:12.551Z"}
+{"level":"info","message":"Organization saved: Test University (6964bc32c656d98a36ec476c)","timestamp":"2026-01-12T09:17:38.701Z"}
+{"level":"info","message":"Organization saved: Test University (6964bc32c656d98a36ec476c)","timestamp":"2026-01-12T09:17:38.826Z"}
+{"level":"info","message":"Organization saved: Test shgc (69666b6f4eda0e46d99024db)","timestamp":"2026-01-13T15:57:35.712Z"}
+{"level":"info","message":"Organization saved: Test shgc (69666b6f4eda0e46d99024db)","timestamp":"2026-01-13T15:57:35.846Z"}
+{"level":"info","message":"Organization saved: Test shgc (69666b6f4eda0e46d99024db)","timestamp":"2026-01-13T16:04:26.887Z"}

@@ -3,9 +3,17 @@ const mongoose = require("mongoose");
 
 const courseSchema = new mongoose.Schema({
 
+  /* ===== ORGANIZATION (Multi-tenancy) ===== */
+  organizationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Organization",
+    required: false,
+    index: true
+  },
+
   /* ===== GENERAL ===== */
   fullName: { type: String, required: true },
-  shortName: { type: String, required: true, unique: true },
+  shortName: { type: String, required: true },
   courseCode: String, // Course ID number (optional)
   
   categoryId: {
@@ -24,8 +32,47 @@ const courseSchema = new mongoose.Schema({
 
   summary: String,
 
+  /* ===== COURSE IMAGE ===== */
+  courseImage: {
+    type: String // URL or file path
+  },
+
+  /* ===== FORMAT ===== */
+
+  hiddenSections: {
+    type: String,
+    enum: ["hidden", "collapsed"],
+    default: "hidden"
+  },
+
+  layout: {
+    type: String,
+    enum: ["single_page", "multiple_pages"],
+    default: "single_page"
+  },
+
   /* ===== APPEARANCE ===== */
+  forceLanguage: {
+    type: String,
+    default: null
+  },
+
+  announcementCount: {
+    type: Number,
+    default: 5
+  },
+
   showGradebook: {
+    type: Boolean,
+    default: true
+  },
+
+  showActivityReports: {
+    type: Boolean,
+    default: false
+  },
+
+  showActivityDates: {
     type: Boolean,
     default: true
   },
@@ -39,6 +86,23 @@ const courseSchema = new mongoose.Schema({
   showCompletionConditions: {
     type: Boolean,
     default: true
+  },
+
+  /* ===== GROUPS ===== */
+  groupMode: {
+    type: String,
+    enum: ["no_groups", "separate", "visible"],
+    default: "no_groups"
+  },
+
+  forceGroupMode: {
+    type: Boolean,
+    default: false
+  },
+
+  defaultGrouping: {
+    type: String,
+    default: null
   },
 
   /* ===== TAGS ===== */
@@ -56,5 +120,11 @@ const courseSchema = new mongoose.Schema({
   }
 
 }, { timestamps: true });
+
+// Indexes for organization scoping
+courseSchema.index({ organizationId: 1, shortName: 1 }, { unique: true }); // Unique shortName per organization
+courseSchema.index({ organizationId: 1, status: 1 });
+courseSchema.index({ organizationId: 1, createdAt: -1 });
+courseSchema.index({ organizationId: 1, categoryId: 1 });
 
 module.exports = mongoose.model("Course", courseSchema);
