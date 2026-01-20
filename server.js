@@ -65,6 +65,8 @@ app.use("/api/courses", require("./routes/course.routes"));
 app.use("/api/categories", require("./routes/category.routes"));
 app.use("/api/enroll", require("./routes/enroll.routes"));
 app.use("/api/cache", require("./routes/cache.routes"));
+app.use("/api/tasks", require("./routes/task.routes"));
+app.use("/api/calendar-events", require("./routes/calendarEvent.routes"));
 
 // ========== Health Check Route ==========
 /**
