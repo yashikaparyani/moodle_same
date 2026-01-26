@@ -52,12 +52,18 @@ exports.getEvents = async (req, res, next) => {
     if (isPublic !== undefined) {
       filter.isPublic = isPublic === 'true';
     } else {
-      // Default: show public events or events created by/for the user
-      filter.$or = [
-        { isPublic: true },
-        { createdByUserId: req.user._id },
-        { attendees: req.user._id }
-      ];
+      // Admins and platform admins can see all events
+      const isAdmin = req.user.role === 'admin' || req.user.isPlatformAdmin;
+      
+      if (!isAdmin) {
+        // Default: show public events or events created by/for the user
+        filter.$or = [
+          { isPublic: true },
+          { createdByUserId: req.user._id },
+          { attendees: req.user._id }
+        ];
+      }
+      // If admin, no additional filter is applied (see all events)
     }
 
     const events = await CalendarEvent.find(filter)

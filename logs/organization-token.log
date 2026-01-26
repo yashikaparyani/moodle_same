@@ -40,3 +40,5 @@
 {"level":"info","message":"Token marked as used: 584870c2bd... by user 69666b6f4eda0e46d99024de","timestamp":"2026-01-13T15:57:35.854Z"}
 {"level":"info","message":"Token validation check: 584870c2bd... - Valid: false","timestamp":"2026-01-13T16:01:22.888Z"}
 {"level":"info","message":"Token validation check: 584870c2bd... - Valid: false","timestamp":"2026-01-13T16:02:02.588Z"}
+{"level":"info","message":"Generated new organization token","timestamp":"2026-01-22T05:57:35.148Z"}
+{"level":"info","message":"Organization token saved: aa6caa78b6... (6971bc4f8f3af064e3c4484d) - Status: active","timestamp":"2026-01-22T05:57:35.170Z"}

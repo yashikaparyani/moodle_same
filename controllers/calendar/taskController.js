@@ -42,11 +42,17 @@ exports.getTasks = async (req, res, next) => {
     if (assignedTo) {
       filter.assignedToUserId = assignedTo;
     } else {
-      // Default: show tasks assigned to current user or created by them
-      filter.$or = [
-        { assignedToUserId: req.user._id },
-        { createdByUserId: req.user._id }
-      ];
+      // Admins and platform admins can see all tasks
+      const isAdmin = req.user.role === 'admin' || req.user.isPlatformAdmin;
+      
+      if (!isAdmin) {
+        // Default: show tasks assigned to current user or created by them
+        filter.$or = [
+          { assignedToUserId: req.user._id },
+          { createdByUserId: req.user._id }
+        ];
+      }
+      // If admin, no additional filter is applied (see all tasks)
     }
 
     // Filter by course

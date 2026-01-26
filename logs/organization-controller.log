@@ -102,3 +102,5 @@
 {"count":3,"level":"info","message":"Organizations listed","page":1,"requestedBy":"69649cbda3588f40b95606ed","timestamp":"2026-01-13T16:15:44.677Z","total":3}
 {"level":"info","message":"Organization details requested","orgId":"6964bc32c656d98a36ec476c","requestedBy":"69649cbda3588f40b95606ed","timestamp":"2026-01-13T16:17:52.840Z"}
 {"level":"info","message":"Organization details fetched","organizationId":"6964bc32c656d98a36ec476c","organizationName":"Test University","timestamp":"2026-01-13T16:17:52.862Z","userCount":1}
+{"email":"contact1@test-university.edu","level":"info","message":"Token generation requested","organizationName":"Test University","requestedBy":"69649cbda3588f40b95606ed","timestamp":"2026-01-22T05:57:35.127Z"}
+{"level":"info","message":"Token generated successfully","organizationName":"Test University","timestamp":"2026-01-22T05:57:35.171Z","tokenId":"6971bc4f8f3af064e3c4484d"}

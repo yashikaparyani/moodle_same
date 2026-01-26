@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const calendarEventController = require('../controllers/calendar/calendarEventController');
-const { authenticateToken } = require('../middleware/authMiddleware');
+const { authenticate } = require('../middleware/authMiddleware');
 
 // Apply authentication middleware to all routes
-router.use(authenticateToken);
+router.use(authenticate);
 
 /**
  * @swagger

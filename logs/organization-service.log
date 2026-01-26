@@ -111,3 +111,5 @@
 {"filters":{"limit":20,"skip":0},"level":"info","message":"Found 3 organizations","timestamp":"2026-01-13T16:15:44.672Z"}
 {"id":"6964bc32c656d98a36ec476c","level":"info","message":"Fetching organization by ID","timestamp":"2026-01-13T16:17:52.841Z"}
 {"id":"6964bc32c656d98a36ec476c","level":"info","message":"Organization fetched successfully","name":"Test University","timestamp":"2026-01-13T16:17:52.855Z"}
+{"createdBy":"69649cbda3588f40b95606ed","email":"contact1@test-university.edu","level":"info","message":"Creating organization token","organizationName":"Test University","timestamp":"2026-01-22T05:57:35.128Z"}
+{"expiresAt":"2026-01-29T05:57:35.149Z","level":"info","message":"Organization token created successfully","organizationName":"Test University","timestamp":"2026-01-22T05:57:35.171Z","tokenId":"6971bc4f8f3af064e3c4484d"}

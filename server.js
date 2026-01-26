@@ -10,6 +10,15 @@ const swaggerSpec = require("./config/swagger");
 // Import configuration
 const connectDB = require("./config/db");
 const { connectRedis } = require("./config/redis");
+const { 
+  generalLimiter, 
+  authLimiter, 
+  passwordResetLimiter,
+  userCreationLimiter,
+  docsLimiter,
+  orgRegistrationLimiter,
+  uploadLimiter
+} = require("./config/rateLimiter");
 
 // Import middleware
 const logger = require("./middleware/logger");
@@ -25,9 +34,54 @@ connectDB();
 // Connect to Redis (optional - server continues if Redis fails)
 connectRedis();
 
+// ========== Static File Serving ==========
+// Serve uploaded files (must be before other middleware that might interfere)
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// ========== CORS Configuration ==========
+// Secure CORS setup with origin whitelist
+const allowedOrigins = process.env.CORS_ORIGINS 
+  ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
+  : [
+      'http://localhost:3000',      // React frontend (development)
+      'http://localhost:5173',      // Vite frontend (development)
+      'http://127.0.0.1:3000',      // Alternative localhost
+      'http://127.0.0.1:5173'       // Alternative localhost
+    ];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, server-to-server)
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`⚠️  CORS blocked request from unauthorized origin: ${origin}`);
+      callback(new Error(`Origin ${origin} not allowed by CORS policy`));
+    }
+  },
+  credentials: true,                    // Allow cookies and authorization headers
+  optionsSuccessStatus: 200,           // For legacy browsers (IE11)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'x-organization-id',
+    'x-requested-with',
+    'Accept',
+    'Origin'
+  ],
+  exposedHeaders: ['Content-Range', 'X-Content-Range', 'X-Total-Count'],
+  maxAge: 600                          // Cache preflight requests for 10 minutes
+};
+
 // ========== Security & Performance Middleware ==========
 app.use(helmet()); // Security headers
-app.use(cors()); // Enable CORS
+app.use(cors(corsOptions)); // Enable CORS with security
 app.use(compression()); // Compress responses
 
 // ========== Body Parser Middleware ==========
@@ -36,6 +90,10 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' })); // Parse URL-enc
 
 // ========== Request Logger ==========
 app.use(logger);
+
+// ========== Rate Limiting ==========
+// Apply to Swagger docs (relaxed limit)
+app.use("/api-docs", docsLimiter);
 
 // ========== Swagger API Documentation ==========
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
@@ -51,15 +109,31 @@ app.get("/api-docs.json", (req, res) => {
 });
 
 // ========== API Routes ==========
-// Organization routes (public and platform admin - no organization context needed)
-app.use("/api/v1/organizations", require("./routes/organization.routes"));
-app.use("/api/v1/organization", require("./routes/organization.routes"));
+// Apply strict limiter for organization registration
+const orgRoutes = require("./routes/organization.routes");
+app.use("/api/v1/organizations", orgRoutes);
+app.use("/api/v1/organization", orgRoutes);
 
 // Apply organization middleware to all other API routes
 app.use("/api", setOrganizationContext, scopeToOrganization);
 
-app.use("/api/auth", require("./routes/auth.routes"));
-app.use("/api/users", require("./routes/user.routes"));
+// Apply general rate limiter to all API routes
+app.use("/api", generalLimiter);
+
+// Authentication routes with strict limiter
+const authRoutes = require("./routes/auth.routes");
+app.use("/api/auth/login", authLimiter);
+app.use("/api/auth/register", authLimiter);
+app.use("/api/auth/forgot-password", passwordResetLimiter);
+app.use("/api/auth/reset-password", passwordResetLimiter);
+app.use("/api/auth", authRoutes);
+
+// User routes with creation limiter
+const userRoutes = require("./routes/user.routes");
+app.post("/api/users", userCreationLimiter); // Apply to user creation only
+app.use("/api/users", userRoutes);
+
+// Other routes
 app.use("/api/audit", require("./routes/audit.routes"));
 app.use("/api/courses", require("./routes/course.routes"));
 app.use("/api/categories", require("./routes/category.routes"));
@@ -67,6 +141,10 @@ app.use("/api/enroll", require("./routes/enroll.routes"));
 app.use("/api/cache", require("./routes/cache.routes"));
 app.use("/api/tasks", require("./routes/task.routes"));
 app.use("/api/calendar-events", require("./routes/calendarEvent.routes"));
+
+// File upload routes with upload limiter
+const uploadRoutes = require("./routes/upload.routes");
+app.use("/api/upload", uploadLimiter, uploadRoutes);
 
 // ========== Health Check Route ==========
 /**

@@ -103,6 +103,38 @@ const defaultRoles = [
       system: { manageSystem: false, manageCategories: false, manageBadges: false, viewLogs: false }
     },
     context: "course"
+  },
+  {
+    name: "course_creator",
+    displayName: "Course Creator",
+    description: "Can create and manage their own courses",
+    type: "system",
+    permissions: {
+      course: { create: true, view: true, edit: true, delete: true, enroll: false, unenroll: false },
+      user: { create: false, view: true, edit: false, delete: false, assignRole: false },
+      activity: { create: true, view: true, edit: true, delete: true, grade: false },
+      assessment: { create: true, view: true, edit: true, delete: true, grade: false, viewAllSubmissions: false },
+      forum: { createDiscussion: true, reply: true, viewDiscussions: true, editAnyPost: false, deleteAnyPost: false },
+      report: { viewCourseReports: true, viewUserReports: false, exportReports: false },
+      system: { manageSystem: false, manageCategories: false, manageBadges: false, viewLogs: false }
+    },
+    context: "course"
+  },
+  {
+    name: "non_editing_teacher",
+    displayName: "Non-editing Teacher",
+    description: "Can grade and interact but cannot edit course content",
+    type: "system",
+    permissions: {
+      course: { create: false, view: true, edit: false, delete: false, enroll: false, unenroll: false },
+      user: { create: false, view: true, edit: false, delete: false, assignRole: false },
+      activity: { create: false, view: true, edit: false, delete: false, grade: true },
+      assessment: { create: false, view: true, edit: false, delete: false, grade: true, viewAllSubmissions: true },
+      forum: { createDiscussion: true, reply: true, viewDiscussions: true, editAnyPost: false, deleteAnyPost: false },
+      report: { viewCourseReports: true, viewUserReports: false, exportReports: false },
+      system: { manageSystem: false, manageCategories: false, manageBadges: false, viewLogs: false }
+    },
+    context: "course"
   }
 ];
 
